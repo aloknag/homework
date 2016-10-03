@@ -82,31 +82,3 @@ def log_to_file(logger, level, message):
     else:
         logger.info("No message")
 
-# while True:
-#     testcases = read_config()
-#     logger = create_logger()
-#     for testcase in testcases:
-#         url, data = testcase['url'], testcase['data']
-#         message = 'Checking for %s' % url
-#         log_to_file(logger, 'info', message)
-#         html, code, response_time = request_url(url=url)
-#         if code == 200:
-#             # We successfully got the URL and have HTML data to check for data
-#             # print code, response_time
-#             if match_data_in_html(html, data):
-#                 message = "Request made to %s completed in %s time - '%s' was found" % (url, str(response_time), data)
-#                 log_to_file(logger, 'info', message)
-#             else:
-#                 message = "Request made to %s completed in %s time - '%s' was not found" % (url, str(response_time), data)
-#                 log_to_file(logger, 'info', message)
-#         else:
-#             # Failed to reach the server and did not get any html data. SKIP/FAIL
-#             # print code
-#             if code:
-#                 message = "Request made to %s failed with error code - %s" % (url, str(code))
-#                 log_to_file(logger, 'error', message)
-#             else:
-#                 message = "Request made to %s failed - Connection Error" % url
-#                 log_to_file(logger, 'error', message)
-#
-#    time.sleep(180)
