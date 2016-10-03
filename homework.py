@@ -1,0 +1,112 @@
+import configparser
+import logging
+import re
+import requests
+
+
+def read_config():
+    """Read the config file - named homework.cfg and returns a list of testcases"""
+    config = configparser.ConfigParser()
+    config.read('homework.cfg')
+
+    def get_config_set(section):
+        """Helper function getConfigSet"""
+        return_dict = {}
+        options = config.options(section=section)
+        for option in options:
+            try:
+                return_dict[option] = config.get(section=section, option=option)
+                if return_dict[option] == -1:
+                    print 'skip: %s' % option
+            except:
+                print 'exception on %s' % option
+
+        return return_dict
+
+    configuration = map(get_config_set, config.sections())
+    return configuration
+
+
+def request_url(url=None):
+    """Makes web request for the provided URL and returns HTML and Return-Code"""
+    if not url:
+        return None
+    try:
+        response = requests.get(url)
+        html_data = response.text
+        return_code = response.status_code
+        time_taken = response.elapsed
+    except:
+        # Error in making request
+        html_data = None
+        return_code = None
+        time_taken = None
+    return html_data, return_code, time_taken
+
+
+def match_data_in_html(html, data):
+    """
+    Input: html data and data to match in html
+    Returns: True or False if match is found or otherwise
+    """
+
+    match = re.search(data, html)
+    if match:
+        # print 'Found', match.group()
+        return True
+    else:
+        # print 'did not find'
+        return False
+
+
+def create_logger():
+    """Create a logger instance and returns it for use"""
+    logger = logging.getLogger('webmonitor')
+    logger.setLevel(logging.DEBUG)
+    ch = logging.FileHandler('monitor.log')
+    ch.setLevel(logging.DEBUG)
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    ch.setFormatter(formatter)
+    logger.addHandler(ch)
+    return logger
+
+
+def log_to_file(logger, level, message):
+    "Write a message to log file using logger instance"
+    if level == 'debug':
+        logger.debug(message)
+    elif level == 'info':
+        logger.info(message)
+    elif level == 'error':
+        logger.error(message)
+    else:
+        logger.info("No message")
+
+# while True:
+#     testcases = read_config()
+#     logger = create_logger()
+#     for testcase in testcases:
+#         url, data = testcase['url'], testcase['data']
+#         message = 'Checking for %s' % url
+#         log_to_file(logger, 'info', message)
+#         html, code, response_time = request_url(url=url)
+#         if code == 200:
+#             # We successfully got the URL and have HTML data to check for data
+#             # print code, response_time
+#             if match_data_in_html(html, data):
+#                 message = "Request made to %s completed in %s time - '%s' was found" % (url, str(response_time), data)
+#                 log_to_file(logger, 'info', message)
+#             else:
+#                 message = "Request made to %s completed in %s time - '%s' was not found" % (url, str(response_time), data)
+#                 log_to_file(logger, 'info', message)
+#         else:
+#             # Failed to reach the server and did not get any html data. SKIP/FAIL
+#             # print code
+#             if code:
+#                 message = "Request made to %s failed with error code - %s" % (url, str(code))
+#                 log_to_file(logger, 'error', message)
+#             else:
+#                 message = "Request made to %s failed - Connection Error" % url
+#                 log_to_file(logger, 'error', message)
+#
+#    time.sleep(180)
