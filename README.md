@@ -18,5 +18,11 @@ USAGE Ex.:   python monitor.py  120
 This will scan all URL's specified in homework.cfg every 120 s.
 The script also log the scan report as INFO or ERROR in monitor.log file.
 
+4. I have provided sample cfg file and also a sample monitor.log file for reference.
+    4.a homework.cfg provides example of how to write up test cases.
+    4.b monitor.log provides example of how the log file looks like.
+    
+
+
 
 
