@@ -39,7 +39,7 @@ if __name__ == '__main__':
         exit()
     # Read all test cases
     test_cases = homework.read_config()
-    # Create aa logger for logging
+    # Create a logger for logging
     logger = homework.create_logger()
     while True:
         probe()
