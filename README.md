@@ -1,5 +1,4 @@
 # homework
-F-Secure home work
 
 The program does following:
 1. Reads config file "homework.cfg" 
